@@ -10,7 +10,7 @@
 		{"key": "Woodward", "synonyms": ["Woodward", "IRC", "WOOD"]}
 	],
 	"scoreIncrements": [
-		{"criterion": "room", "increment": 100},
+		{"criterion": "room", "increment": 10},
 		{"criterion": "building", "increment": 10},
 		{"criterion": "capacity", "increment": 10},
 		{"criterion": "whiteboard", "increment": 1},

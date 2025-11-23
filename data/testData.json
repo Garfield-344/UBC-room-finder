@@ -1,0 +1,7 @@
+{
+	"rooms": [
+		{"id": "156", "building": "Irving K. Barber", "whiteboard": true, "tv": false, "outlets": true, "quiet": true},
+		{"id": "158", "building": "Irving K. Barber", "whiteboard": true, "tv": false, "outlets": false, "quiet": true},
+		{"id": "20D", "building": "Woodward", "whiteboard": true, "tv": true, "outlets": true, "quiet": false}
+	]
+}
