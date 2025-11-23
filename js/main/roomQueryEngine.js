@@ -2,9 +2,33 @@ import * as constantsData from '../../data/roomQueryConstants.json' with {type: 
 
 /**
  * This class sorts the rooms based on a user's text query or filters. It is
- * based on a scoring system defined partly in roomQueryConstants.jsonl
+ * based on a scoring system defined partly in roomQueryConstants.json.
  * For text queries, this class deals with slightly mispelled words and 
  * synonyms as defined in roomQueryConstants.json.
+ * 
+ * “PUBLIC” FUNCTIONS:
+ * All functions are public for testing purposes, but only the last two
+ * functions should be used by the front-end controller, i.e.
+ * scoreRoomByQuery() and orderRoomsByQuery(). Check their documentation for
+ * more details.
+ * 
+ * TEXT QUERIES:
+ * For the search bar, text queries can be passed directly as the “query”
+ * argument in either “public” function above.
+ * 
+ * BUTTON QUERIES:
+ * One way to go about filtering by buttons is to have each button add words
+ * to a string, then have this string passed as the “query” argument. Please
+ * tell me if that is too slow/unresponsive.
+ * 
+ * MAP DOTS:
+ * If we want to have dots on a map be brighter or greener based on their
+ * score, then use the scoreRoomByQuery() function to get the score for each
+ * room. The scores are not normalised, so you may need to normalise them based
+ * on a theoretica maximum score (get that by summing all the “increment” 
+ * values in the scoreIncrements list in roomQueryConstants).
+ * 
+ * – Ronaldo
  */
 export default class RoomQueryEngine {
 	constructor() {

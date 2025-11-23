@@ -1,5 +1,6 @@
 /**
- * This file tests RoomQueryEngine the lazy way
+ * This file tests RoomQueryEngine (the lazy way).
+ * 
  * I forgot how much I disliked JS and Mocha won't cooperate unless I set this
  * as a Node project and I don't feel like doing that.
  */
