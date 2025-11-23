@@ -149,7 +149,7 @@ export default class RoomQueryEngine {
 	 * @param {Object} room Object representing a room
 	 * @returns Integer score of a room
 	 */
-	scoreRoomByTextQuery(query, room) {
+	scoreRoomByQuery(query, room) {
 		const tokens = query.split(/\W+/);
 		let score = 0;
 
