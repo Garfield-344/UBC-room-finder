@@ -1,8 +1,0 @@
-id: string
-building: string
-capacity: int 
-whiteboard: bool
-tv: bool
-outlets: bool
-url: string
-quiet: bool
