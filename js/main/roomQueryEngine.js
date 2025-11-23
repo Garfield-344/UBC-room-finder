@@ -171,7 +171,7 @@ export default class RoomQueryEngine {
 	 * @param {List} rooms List of Room objects
 	 * @returns List of rooms sorted by score.
 	 */
-	getRoomsOrderedByQuery(query, rooms) {
+	orderRoomsByQuery(query, rooms) {
 		// Stub only, will implement sorting later
 		return rooms;
 	}
