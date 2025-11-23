@@ -1,0 +1,21 @@
+{
+	"amenitySynonyms": [
+		{"key": "whiteboard", "synonyms": ["whiteboard", "chalkboard"]},
+		{"key": "tv", "synonyms": ["tv", "projector", "television", "screen"]},
+		{"key": "outlets", "synonyms": ["outlets", "plugs", "power"]},
+		{"key": "quiet", "synonyms": ["quiet", "silent"]}
+	],
+	"buildingSynonyms": [
+		{"key": "Irving K. Barber", "synonyms": ["Irving K. Barber", "IKB", "IBLC"]},
+		{"key": "Woodward", "synonyms": ["Woodward", "IRC", "WOOD"]}
+	],
+	"scoreIncrements": [
+		{"criterion": "room", "increment": 100},
+		{"criterion": "building", "increment": 10},
+		{"criterion": "capacity", "increment": 10},
+		{"criterion": "whiteboard", "increment": 1},
+		{"criterion": "tv", "increment": 1},
+		{"criterion": "outlets", "increment": 1},
+		{"criterion": "quiet", "increment": 1}
+	]
+}
