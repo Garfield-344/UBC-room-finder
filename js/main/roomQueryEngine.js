@@ -40,6 +40,7 @@ export default class RoomQueryEngine {
 	 * 
 	 * @param {String} a A string
 	 * @param {String} b Another string
+	 * @returns True if a and b are nearly equal, false otherwise.
 	 */
 	static isStringAlmostEqual(a, b) {
 		let uppercase_a = a.toUpperCase();
@@ -78,7 +79,8 @@ export default class RoomQueryEngine {
 	 * 
 	 * @param {String} token A single word as received from the query
 	 * @param {Object} room Object representing the room being evaluated
-	 * @returns Score for the token
+	 * @returns Score for the token, if it fits a criteria (except for "room"),
+	 * 0 otherwise
 	 */
 	singleTokenScore(token, room) {
 		// If token is numerical, interpret as capacity & evaluate
@@ -111,6 +113,8 @@ export default class RoomQueryEngine {
 	 * 
 	 * @param {List} tokens Exactly tokens, in order of input
 	 * @param {Object} room Object representing the room being evaluated
+	 * @returns The score increment for the "room" criterion if the tokens are
+	 * a match for the input room, 0 otherwise.
 	 */
 	exactRoomMatch(tokens, room) {
 		let isExactMatch = 0; // Needs to be incremented to 2 to be an exact match.
@@ -143,6 +147,7 @@ export default class RoomQueryEngine {
 	 * 
 	 * @param {String} query Full, unmodified query input by the user
 	 * @param {Object} room Object representing a room
+	 * @returns Integer score of a room
 	 */
 	scoreRoomByTextQuery(query, room) {
 		const tokens = query.split(/\W+/);
@@ -157,5 +162,17 @@ export default class RoomQueryEngine {
 		}
 
 		return score;
+	}
+
+	/**
+	 * (WIP) Sorts a list of rooms according to the query engine's scoring functions
+	 * 
+	 * @param {query} query Full, unmodified query input by the user
+	 * @param {List} rooms List of Room objects
+	 * @returns List of rooms sorted by score.
+	 */
+	getRoomsOrderedByQuery(query, rooms) {
+		// Stub only, will implement sorting later
+		return rooms;
 	}
 }
