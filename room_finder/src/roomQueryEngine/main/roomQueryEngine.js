@@ -1,4 +1,4 @@
-import * as constantsData from '../../data/roomQueryConstants.json' with {type: 'json'};
+import * as constantsData from '../data/roomQueryConstants.json' with {type: 'json'};
 
 /**
  * This class sorts the rooms based on a user's text query or filters. It is
@@ -32,7 +32,9 @@ import * as constantsData from '../../data/roomQueryConstants.json' with {type: 
  */
 export default class RoomQueryEngine {
 	constructor() {
+		// Don't worry about the squiggly line here, “default” is correct here.
 		this.constants = constantsData.default;
+		this.cache = [];
 	}
 
 	/**
@@ -135,7 +137,7 @@ export default class RoomQueryEngine {
 	 * plus room number (i.e. "IBLC 203", not "Irving K. Barber 203"), check if
 	 * two adjacent words are an exact match for a room
 	 * 
-	 * @param {List} tokens Exactly tokens, in order of input
+	 * @param {Array} tokens Exactly tokens, in order of input
 	 * @param {Object} room Object representing the room being evaluated
 	 * @returns The score increment for the "room" criterion if the tokens are
 	 * a match for the input room, 0 otherwise.
@@ -185,18 +187,19 @@ export default class RoomQueryEngine {
 			score += this.singleTokenScore(token, room);
 		}
 
+		
 		return score;
 	}
 
 	/**
 	 * (WIP) Sorts a list of rooms according to the query engine's scoring functions
 	 * 
-	 * @param {query} query Full, unmodified query input by the user
-	 * @param {List} rooms List of Room objects
+	 * @param {Object} query Full, unmodified query input by the user
+	 * @param {Array} rooms List of Room objects
 	 * @returns List of rooms sorted by score.
 	 */
 	orderRoomsByQuery(query, rooms) {
 		// Stub only, will implement sorting later
-		return rooms;
+		
 	}
 }
