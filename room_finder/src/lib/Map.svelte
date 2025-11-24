@@ -3,7 +3,7 @@
 
     let left = $state(0);
     let top = $state(0);
-    let width = $state(100);
+    let width = $state(window.screen.width);
 
     function onmousedown(e) {
         const initialX = left;
@@ -23,11 +23,11 @@
     }
 
     function onwheel(e) {
-        const delta = e.deltaY * -0.1;
+        const delta = e.deltaY * (width/1000);
         const enlarge = (width + delta)/width;
         
-        left = left + e.pageX * (1 - enlarge);
-        //top = top + e.pageY - (e.pageY * enlarge);
+        left = e.pageX - enlarge * (e.pageX - left);
+        top = e.pageY - enlarge * (e.pageY - top);
         width = width + delta;
     }
 </script>
