@@ -6,20 +6,29 @@ import * as constantsData from '../data/roomQueryConstants.json' with {type: 'js
  * For text queries, this class deals with slightly mispelled words and 
  * synonyms as defined in roomQueryConstants.json.
  * 
+ * *UPDATE*
+ * - Use filterAndOrderRoomsByQuery() instead of orderRoomsByQuery().
+ * - Clarified function to use in "Text Queries" section.
+ * - "Button queries" section updated
+ * 
  * “PUBLIC” FUNCTIONS:
  * All functions are public for testing purposes, but only the last two
  * functions should be used by the front-end controller, i.e.
- * scoreRoomByQuery() and orderRoomsByQuery(). Check their documentation for
- * more details.
+ * scoreRoomByQuery() and filterAndOrderRoomsByQuery(). Check their
+ * documentation for more details.
  * 
  * TEXT QUERIES:
  * For the search bar, text queries can be passed directly as the “query”
- * argument in either “public” function above.
+ * argument in the filterAndOrderRoomsByQuery() function above.
  * 
  * BUTTON QUERIES:
  * One way to go about filtering by buttons is to have each button add words
  * to a string, then have this string passed as the “query” argument. Please
- * tell me if that is too slow/unresponsive.
+ * tell me if that is too slow/unresponsive. Note that
+ * filterAndOrderRoomsByQuery() will NOT remove rooms that only match some of
+ * the buttons. If I have the time I can implment a secondary function that
+ * does button queries combined with “AND” (e.g. “whiteboard” AND “outlets”,
+ * not returning rooms that only have whiteboards or only have outlets)
  * 
  * MAP DOTS:
  * If we want to have dots on a map be brighter or greener based on their
@@ -223,6 +232,20 @@ export default class RoomQueryEngine {
 		return sortedRooms;
 	}
 
+	/**
+	 * Sorts a list of rooms according to the query engine's scoring functions
+	 * in descending order (i.e. sortedRooms[0] is the room with highest score)
+	 * AND removes rooms with score = 0.
+	 * 
+	 * @param {Object} query Full, unmodified query input by the user
+	 * @param {Array} rooms List of Room objects
+	 * @returns A potentially smaller list of rooms sorted by score.
+	 */
+	filterAndOrderRoomsByQuery(query, rooms) {
+		// Janky I know. This was coded in a 340 lecture.
+		return this.orderRoomsByQuery(query, rooms).filter((e) => {return this.scoreRoomByQuery(query, e) > 0});
+	}
+
 	// TODO: Maybe a pre-filtering function that filters by buttons (so that
-	// results can be removed from search results).
+	// results can be removed from search results)?
 }
