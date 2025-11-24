@@ -34,7 +34,7 @@ export default class RoomQueryEngine {
 	constructor() {
 		// Don't worry about the squiggly line here, “default” is correct here.
 		this.constants = constantsData.default;
-		this.cache = [];
+		this.cache = new Map();
 	}
 
 	/**
@@ -176,6 +176,11 @@ export default class RoomQueryEngine {
 	 * @returns Integer score of a room
 	 */
 	scoreRoomByQuery(query, room) {
+		// Check if cache has the score for the same query and room
+		if (this.cache.get() != null) {
+			return this.cache.get();
+		}
+
 		const tokens = query.split(/\W+/);
 		let score = 0;
 
@@ -187,19 +192,37 @@ export default class RoomQueryEngine {
 			score += this.singleTokenScore(token, room);
 		}
 
-		
+		this.cache.set({query, room}, score);		
 		return score;
 	}
 
 	/**
-	 * (WIP) Sorts a list of rooms according to the query engine's scoring functions
+	 * Sorts a list of rooms according to the query engine's scoring functions
+	 * in descending order (i.e. sortedRooms[0] is the room with highest score)
+	 * This function always returns all passed rooms.
 	 * 
 	 * @param {Object} query Full, unmodified query input by the user
 	 * @param {Array} rooms List of Room objects
 	 * @returns List of rooms sorted by score.
 	 */
 	orderRoomsByQuery(query, rooms) {
-		// Stub only, will implement sorting later
+		// O(n log n) for every query should be okay right? Please tell me if
+		// it is too slow.
+		let sortedRooms = rooms.slice();
 		
+		sortedRooms.sort((a, b) => {
+			if (this.scoreRoomByQuery(query, a) > this.scoreRoomByQuery(query, b)) {
+				return -1;
+			}
+			if (this.scoreRoomByQuery(query, a) < this.scoreRoomByQuery(query, b)) {
+				return 1;
+			}
+			return 0;
+		})
+
+		return sortedRooms;
 	}
+
+	// TODO: Maybe a pre-filtering function that filters by buttons (so that
+	// results can be removed from search results).
 }

@@ -6,6 +6,7 @@
  */
 
 import RoomQueryEngine from '../main/roomQueryEngine.js';
+import * as testData from '../data/testData.json' with {type: 'json'};
 
 function sanityTest() {
 	const engine = new RoomQueryEngine();
@@ -117,12 +118,30 @@ function scoreRoomByTextQueryTest() {
 	// Building + capacity + chalkboard match (No "tv" match, room has no television)
 	pass = pass && (engine.scoreRoomByQuery("ikb 6 people tv chalkboard", room1) == 21);
 	console.log("SRBTQT 3: " + pass);
+	// Same query as the previous one to test cache hits.
+	pass = pass && (engine.scoreRoomByQuery("ikb 6 people tv chalkboard", room1) == 21);
+	console.log("SRBTQT 4: " + pass);
 	// No match
 	pass = pass && (engine.scoreRoomByQuery("irrelevant text", room1) == 0);
-	console.log("SRBTQT 4: " + pass);
+	console.log("SRBTQT 5: " + pass);
 
 	console.log("Score Room By Text Query passes? " + pass);
+}
 
+function orderRoomsByQueryTest() {
+	// The "default" is correct, ignore the autocorrect
+	const rooms = testData.default.rooms;
+	const engine = new RoomQueryEngine();
+	const actualResult = engine.orderRoomsByQuery("wood plugs", rooms);
+	const expectedResult = [rooms[2], rooms[0], rooms[1]];
+	
+	let pass = true;
+
+	for (let i = 0; i < 3; i++) {
+		pass = pass && (actualResult[i].id == expectedResult[i].id);
+	}
+
+	console.log("Order Rooms By Query passes? " + pass);
 }
 
 sanityTest();
@@ -132,3 +151,4 @@ matchesSynonymsTest();
 singleTokenScoreTest();
 exactRoomMatchTest();
 scoreRoomByTextQueryTest();
+orderRoomsByQueryTest();
