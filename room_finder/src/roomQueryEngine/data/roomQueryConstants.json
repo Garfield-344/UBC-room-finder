@@ -3,7 +3,8 @@
 		{"key": "whiteboard", "synonyms": ["whiteboard", "chalkboard"]},
 		{"key": "tv", "synonyms": ["tv", "projector", "television", "screen"]},
 		{"key": "outlets", "synonyms": ["outlets", "plugs", "power"]},
-		{"key": "quiet", "synonyms": ["quiet", "silent"]}
+		{"key": "quiet", "synonyms": ["quiet", "silent"]},
+		{"key": "food_near", "synonyms": ["food_near", "restaurant", "cafe", "snacks"]}
 	],
 	"buildingSynonyms": [
 		{"key": "Irving K. Barber", "synonyms": ["Irving K. Barber", "IKB", "IBLC"]},
@@ -16,6 +17,7 @@
 		{"criterion": "whiteboard", "increment": 1},
 		{"criterion": "tv", "increment": 1},
 		{"criterion": "outlets", "increment": 1},
-		{"criterion": "quiet", "increment": 1}
+		{"criterion": "quiet", "increment": 1},
+		{"criterion": "food_near", "increment": 1}
 	]
 }
