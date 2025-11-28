@@ -2,6 +2,10 @@
   import Map from './lib/Map.svelte';
   import rooms from './assets/rooms.json';
   import FilterButton from './lib/FilterButton.svelte';
+  import SearchButton from "./lib/SearchButton.svelte";
+  import RoomQueryEngine from './roomQueryEngine/main/roomQueryEngine';
+
+  const roomQueryEngine = new RoomQueryEngine();
 
   function filterRoom(room, filters) {
     return !Object.keys(filters).map((attribute) => {
@@ -49,6 +53,10 @@
     return result;
   }
 
+  function onSearch(query) {
+    console.log(query);
+  }
+
   let filters = $state({});
   let preferences = $state({})
   let selectedBuilding = $state("all");
@@ -66,6 +74,8 @@
         <FilterButton name={"tv"} filters={filters} />
         <FilterButton name={"quiet"} filters={filters} />
         <FilterButton name={"food_near"} filters={filters} />
+        <SearchButton onSearch="{onSearch}" />
+
       </div>
       <div class="floating-sidebar">
         <!--
@@ -78,6 +88,12 @@
         "quiet": false,
         "food_near": true
         -->
+        <div style="font-weight: bold; font-size: 30px; margin: 5px;">
+          Your Best Rooms
+        </div>
+
+
+        <b style="margin: 5px">Building:</b>
         <select bind:value={selectedBuilding}>
           <option value="all">All</option>
           {#each filterRankedBuildings as building}
@@ -138,6 +154,11 @@
           border-bottom: 1px solid;
         }
       }
+
+      // ===
+      //border-radius: 15px;
+      background: #E6E6E6;
+
     }
   }
 </style>
