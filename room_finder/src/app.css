@@ -14,8 +14,8 @@
 }
 
 a {
-  font-weight: 500;
-  color: #646cff;
+  font-weight: inherit;
+  color: inherit;
   text-decoration: inherit;
 }
 a:hover {
@@ -31,6 +31,7 @@ body {
 
   --room-finder-grey: #E6E6E6;
   --room-finder-grey-2: #CACACA;
+  --room-finder-grey-3: #888;
 
   --room-finder-green-1: #2EFE54;
   --room-finder-green-2: #8cf49d;
@@ -100,8 +101,14 @@ select {
 dt {
   display: inline;
   font-weight: 600;
+  font-size: 0.9em;
 }
 dd {
   margin-left: 0.5em;
   display: inline;
+  font-size: 0.9em;
+}
+
+img {
+  display: block;
 }

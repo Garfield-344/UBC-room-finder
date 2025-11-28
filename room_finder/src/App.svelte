@@ -119,7 +119,7 @@
     <Map buildings={filterRankedBuildings} bind:selectedBuilding={selectedBuilding} />
     <div class="ui">
       <div class="top-inputs">
-        <div class="filters">
+        <div class={"filters " + (searchActive ? "greyed-out": "")}>
           <FilterButton name={"outlets"} bind:query={query} />
           <FilterButton name={"whiteboard"} bind:query={query} />
           <FilterButton name={"tv"} bind:query={query} />
@@ -140,7 +140,7 @@
         "food_near": true
         -->
         <div style="font-weight: bold; font-size: 30px; margin: 5px;">
-          Your Best Rooms
+          Your Best UBC Study Rooms
         </div>
 
 
@@ -153,7 +153,7 @@
         </select>
         <ul>
           {#each roomsFilteredBySelectedBuilding(filterRankedRooms, selectedBuilding) as room}
-            <RoomListItem room={room} query={query} />
+            <RoomListItem room={room} query={query} searchActive={searchActive}/>
           {/each}
         </ul>
       </div>
@@ -173,7 +173,7 @@
     }
     .top-inputs {
       display: flex;
-      gap: 0.5em;
+      gap: 1em;
       
       position: absolute;
       top: 1em;
@@ -186,6 +186,11 @@
 
       background: var(--room-finder-grey);
       border-radius: 1em;
+
+      &.greyed-out {
+        filter: grayscale(1) saturate(0.5) blur(1px);
+        opacity: 0.75;
+      }
     }
     .floating-sidebar {
       padding: 1em;

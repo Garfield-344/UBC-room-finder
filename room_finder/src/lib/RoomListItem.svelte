@@ -1,5 +1,5 @@
 <script>
-    let {room, query} = $props();
+    let {room, query, searchActive} = $props();
         
     function QueryAttributesOfRoom(query, validAttributes, room) {
         return Object.keys(query).filter((k) => query[k] != 0 && validAttributes.includes(k) && room[k] != false);
@@ -26,7 +26,9 @@
 
 <li class="room" style:--score={String(room.score * 100) + "%"}>
     <div class="room--left">
+        {#if room.img}
         <img class="room--image" src={room.img} alt={room.title} />
+        {/if}
         <p class="room--link"><a href={room.url}>See webpage</a></p>
     </div>
     <div class="room--right">
@@ -35,9 +37,11 @@
         {#if getAttributesFromRoom(attributes, room).length > 0}
         <div class="room--attributes">                
             <div class="room--icon-row">
+            {#if !searchActive}
             {#each QueryAttributesOfRoom(query, attributes, room) as attribute}
                 <img class={"icon " + judgeRoomAttributeAgainstQuery(query, room, attribute)} title={attribute} src={"/UBC-room-finder/src/assets/icons/" + attribute + ".svg"} alt={attribute}/>
             {/each}
+            {/if}
             </div>
             <dt>{attributeType}</dt>
             <dd>{getAttributesFromRoomString(attributes, room)}</dd>
