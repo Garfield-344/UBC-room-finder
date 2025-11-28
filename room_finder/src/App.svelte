@@ -95,6 +95,10 @@
     return preference;
   }
 
+  function roomsFilteredBySelectedBuilding(rooms, selectedBuilding) {
+    return rooms.filter(({building}) => building==selectedBuilding || selectedBuilding == "all")
+  }
+
   const defaultQuery = {
     "quiet": 1,
     "outlets": 2,
@@ -148,7 +152,7 @@
           {/each}
         </select>
         <ul>
-          {#each filterRankedRooms.filter(({building}) => building==selectedBuilding || selectedBuilding == "all") as room}
+          {#each roomsFilteredBySelectedBuilding(filterRankedRooms, selectedBuilding) as room}
             <RoomListItem room={room} query={query} />
           {/each}
         </ul>
@@ -185,7 +189,7 @@
     }
     .floating-sidebar {
       padding: 1em;
-      width: 400px;
+      width: 450px;
 
       position: absolute;
       top: 1em;
