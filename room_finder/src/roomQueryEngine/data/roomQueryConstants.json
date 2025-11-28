@@ -8,7 +8,10 @@
 	],
 	"buildingSynonyms": [
 		{"key": "Irving K. Barber", "synonyms": ["Irving K. Barber", "IKB", "IBLC"]},
-		{"key": "Woodward", "synonyms": ["Woodward", "IRC", "WOOD"]}
+		{"key": "Woodward", "synonyms": ["Woodward", "IRC", "WOOD"]},
+		{"key": "Koerner", "synonyms": ["Koerner", "KLIB", "KOERN", "KORN", "Sedgewick"]},
+		{"key": "Arts Student Centre", "synonyms": ["Arts Student Centre", "Arts", "ASC", "ARTC"]},
+		{"key": "Engineering Student Centre", "synonyms": ["Engineering Student Centre", "Engineering", "ESC"]}
 	],
 	"scoreIncrements": [
 		{"criterion": "room", "increment": 100},
