@@ -30,7 +30,7 @@
     }
 
     function onwheel(e) {
-        const delta = e.deltaY * (width/1000);
+        const delta = -1 * e.deltaY * (width/1000);
         const enlarge = (width + delta)/width;
         
         left = e.pageX - enlarge * (e.pageX - left);

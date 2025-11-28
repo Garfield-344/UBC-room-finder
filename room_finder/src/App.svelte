@@ -49,25 +49,12 @@
 
     const RoomsByBuilding = Object.groupBy(rankedRooms, ({building}) => building);
 
-    let result = Object.keys(RoomsByBuilding).map((building) => (
+    let result = Object.keys(buildings).map((building) => (
       {
         "building": building,
         "coordinates": buildings[building].coordinates,
-        "score": RoomsByBuilding[building].reduce((total, {score}) => Math.max(total, score), 0)
+        "score": building in RoomsByBuilding ? RoomsByBuilding[building].reduce((total, {score}) => Math.max(total, score), 0) : 0
       }));
-
-    // Add in filtered out buildings with a score of 0. This is so we can see the dots on the map shrink to nothing instead of immediately disasapearing
-    for (let building of Object.keys(buildings)) {
-      if (!(building in Object.keys(RoomsByBuilding))) {
-        result.push(
-          {
-            "building": building,
-            "coordinates": buildings[building].coordinates,
-            "score": 0
-          }
-        )
-      }
-    }
 
     return result;
   }
