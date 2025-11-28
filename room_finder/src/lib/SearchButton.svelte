@@ -22,7 +22,7 @@
     }
 </script>
 
-<div>
+<div style="display:contents">
 
     {#if expanded}
 
@@ -30,7 +30,7 @@
                 class="expanded"
                 bind:value={text}
                 type="text"
-                placeholder="e.g. I want a quiet room."
+                placeholder="e.g. Quiet room at IKB"
                 onkeydown={(e) => e.key === 'Enter' && submit()}
         />
         <button

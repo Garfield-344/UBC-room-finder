@@ -3,7 +3,9 @@
   import rooms from './assets/rooms.json';
   import FilterButton from './lib/FilterButton.svelte';
   import SearchButton from "./lib/SearchButton.svelte";
+  import RoomQueryEngine from './roomQueryEngine/main/roomQueryEngine';
 
+  const roomQueryEngine = new RoomQueryEngine();
 
   function filterRoom(room, filters) {
     return !Object.keys(filters).map((attribute) => {
@@ -51,8 +53,8 @@
     return result;
   }
 
-  function onSearch(text) {
-    console.log(text);
+  function onSearch(query) {
+    console.log(query);
   }
 
   let filters = $state({});
