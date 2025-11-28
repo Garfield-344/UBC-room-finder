@@ -1,4 +1,6 @@
 <script>
+import {icon_mapper} from "./iconmapper.js";
+
 let {name, query= $bindable()} = $props();
 
 const valsToState = {
@@ -24,7 +26,7 @@ function toggle(dir) {
 
 <div class={"filter " + attributeState}>
     <div class="filter-button-content">
-        <img class="filter-icon" title={name} src={"/UBC-room-finder/src/assets/icons/" +name + ".svg"} alt={name}/>
+        <img class="filter-icon" title={name} src={icon_mapper[name]} alt={name}/>
         <!--<span class="filter-label">{name}</span>-->
     </div>
     <div class="filter-button--button-container">

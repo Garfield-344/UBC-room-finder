@@ -1,4 +1,6 @@
 <script>
+    import {icon_mapper} from "./iconmapper.js";
+
     let {room, query, searchActive} = $props();
         
     function QueryAttributesOfRoom(query, validAttributes, room) {
@@ -39,7 +41,7 @@
             <div class="room--icon-row">
             {#if !searchActive}
             {#each QueryAttributesOfRoom(query, attributes, room) as attribute}
-                <img class={"icon " + judgeRoomAttributeAgainstQuery(query, room, attribute)} title={attribute} src={"/UBC-room-finder/src/assets/icons/" + attribute + ".svg"} alt={attribute}/>
+                <img class={"icon " + judgeRoomAttributeAgainstQuery(query, room, attribute)} title={attribute} src={icon_mapper[attribute]} alt={attribute}/>
             {/each}
             {/if}
             </div>
