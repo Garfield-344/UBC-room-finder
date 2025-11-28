@@ -246,6 +246,21 @@ export default class RoomQueryEngine {
 		return this.orderRoomsByQuery(query, rooms).filter((e) => {return this.scoreRoomByQuery(query, e) > 0});
 	}
 
+	normalizeScoreRooms(query, rooms) {
+		const scoredRooms = rooms.map((room) => ({...room, "score": this.scoreRoomByQuery(query, room)})).filter(({score}) => score > 0);
+		
+		if (scoredRooms.length < 1) {
+			return [];
+		}
+		const max = scoredRooms.reduce((total, {score}) => Math.max(total, score), 0);
+		console.log(max);
+
+		const normalizedScoredRooms = scoredRooms.map((room) => ({...room, "score": room["score"]/max}));
+
+		const orderedNormalizedScoredRooms = normalizedScoredRooms.sort((roomA, roomB) => roomB["score"] - roomA["score"]);
+		return orderedNormalizedScoredRooms;
+	}
+
 	// TODO: Maybe a pre-filtering function that filters by buttons (so that
 	// results can be removed from search results)?
 }

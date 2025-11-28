@@ -1,44 +1,31 @@
 <script>
-    let { onSearch = () => {} } = $props();
-
-    let expanded = $state(false);
-    let text = $state("");
+    let { searchQuery=$bindable(), searchActive=$bindable() } = $props();
 
     function expand() {
-        expanded = true;
+        searchActive = true;
     }
 
     function collapse() {
-        expanded = false;
-        text = "";
-    }
-
-    function submit() {
-        if (text.trim() === "") {
-            // collapse();
-        } else if (text.trim()) {
-            onSearch(text);
-        }
+        searchActive = false;
     }
 </script>
 
 <div style="display:contents">
 
-    {#if expanded}
+    {#if searchActive}
 
         <input
                 class="expanded"
-                bind:value={text}
+                bind:value={searchQuery}
                 type="text"
                 placeholder="e.g. Quiet room at IKB"
-                onkeydown={(e) => e.key === 'Enter' && submit()}
         />
         <button
                 onclick={collapse}
         > &lt&lt </button>
     {/if}
 
-    {#if !expanded}
+    {#if !searchActive}
         <button
                 class="collapsed"
                 onclick={expand}

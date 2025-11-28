@@ -4,6 +4,7 @@
   import FilterButton from './lib/FilterButton.svelte';
   import SearchButton from "./lib/SearchButton.svelte";
   import RoomQueryEngine from './roomQueryEngine/main/roomQueryEngine';
+  import RoomListItem from './lib/RoomListItem.svelte';
 
   const roomQueryEngine = new RoomQueryEngine();
 
@@ -24,13 +25,19 @@
     }).length+1)/(Object.keys(preferences).length + 1);
   }
 
-  function filterRankRooms(rooms, filters, preferences) {
+  function filterRankRooms(rooms, filters, preferences, searchActive, searchQuery) {
+    if (searchActive) {
+      const searchResult = roomQueryEngine.normalizeScoreRooms(searchQuery, rooms);
+      console.log(searchResult);
+      return searchResult;
+    }
+
     const filteredRooms = rooms.filter((room) => filterRoom(room, filters));
-    const rankedRooms = filteredRooms.map((room) => ({...room, "score": rankRoom(room, preferences)}));
+    const rankedRooms = filteredRooms.map((room) => ({...room, "score": rankRoom(room, preferences)})).sort((roomA, roomB) => roomB["score"] - roomA["score"]);
     return rankedRooms;
   }
 
-  function filterRankBuildings(rooms, filters, preferences) {
+  function rankBuildings(rankedRooms) {
     const buildings = {
         'Irving K. Barber': { coordinates: [49.267583221844326, -123.25265292744709]},
         'Koerner': { coordinates: [49.266691562352584, -123.255176004471]},
@@ -39,43 +46,83 @@
         'Engineering Student Centre': {coordinates: [49.26231460694829, -123.24930974763845]},
       };
     
-    const rankedRooms = filterRankRooms(rooms, filters, preferences);
 
     const RoomsByBuilding = Object.groupBy(rankedRooms, ({building}) => building);
 
-    const result = Object.keys(RoomsByBuilding).map((building) => (
+    let result = Object.keys(RoomsByBuilding).map((building) => (
       {
         "building": building,
         "coordinates": buildings[building].coordinates,
         "score": RoomsByBuilding[building].reduce((total, {score}) => Math.max(total, score), 0)
       }));
 
+    // Add in filtered out buildings with a score of 0. This is so we can see the dots on the map shrink to nothing instead of immediately disasapearing
+    for (let building of Object.keys(buildings)) {
+      if (!(building in Object.keys(RoomsByBuilding))) {
+        result.push(
+          {
+            "building": building,
+            "coordinates": buildings[building].coordinates,
+            "score": 0
+          }
+        )
+      }
+    }
+
     return result;
   }
 
   function onSearch(query) {
     console.log(query);
+    console.log(roomQueryEngine.filterAndOrderRoomsByQuery(query, rooms));
   }
 
-  let filters = $state({});
-  let preferences = $state({})
+  function queryToFilters(query) {
+    const filterKeys = Object.keys(query).filter((k) => Math.abs(query[k]) > 1);
+    let filter = {};
+    for (let k of filterKeys) {
+      filter[k] = (query[k] > 0);
+    }
+    return filter;
+  }
+
+  function queryToPreferences(query) {
+    const PreferenceKeys = Object.keys(query).filter((k) => Math.abs(query[k]) == 1);
+    let preference = {};
+    for (let k of PreferenceKeys) {
+      preference[k] = (query[k] > 0);
+    }
+    return preference;
+  }
+
+  const defaultQuery = {
+    "quiet": 1,
+    "outlets": 2,
+  }
+
+  let searchQuery = $state("");
+  let searchActive = $state(false);
+  let query = $state(defaultQuery);
+  let filters = $derived(queryToFilters(query));
+  let preferences = $derived(queryToPreferences(query));
   let selectedBuilding = $state("all");
 
-  let filterRankedRooms = $derived(filterRankRooms(rooms, filters, preferences));
-  let filterRankedBuildings = $derived(filterRankBuildings(rooms, filters, preferences)); 
+  let filterRankedRooms = $derived(filterRankRooms(rooms, filters, preferences, searchActive, searchQuery));
+  let filterRankedBuildings = $derived(rankBuildings(filterRankedRooms)); 
 </script>
 
 <main>
-    <Map buildings={filterRankedBuildings} />
+    <Map buildings={filterRankedBuildings} bind:selectedBuilding={selectedBuilding} />
     <div class="ui">
-      <div class="filters">
-        <FilterButton name={"outlets"} filters={filters} />
-        <FilterButton name={"whiteboard"} filters={filters} />
-        <FilterButton name={"tv"} filters={filters} />
-        <FilterButton name={"quiet"} filters={filters} />
-        <FilterButton name={"food_near"} filters={filters} />
-        <SearchButton onSearch="{onSearch}" />
-
+      <div class="top-inputs">
+        <div class="filters">
+          <FilterButton name={"outlets"} bind:query={query} />
+          <FilterButton name={"whiteboard"} bind:query={query} />
+          <FilterButton name={"tv"} bind:query={query} />
+          <FilterButton name={"quiet"} bind:query={query} />
+          <FilterButton name={"food_near"} bind:query={query} />
+        </div>
+        <SearchButton bind:searchQuery={searchQuery} bind:searchActive={searchActive} />
       </div>
       <div class="floating-sidebar">
         <!--
@@ -102,17 +149,7 @@
         </select>
         <ul>
           {#each filterRankedRooms.filter(({building}) => building==selectedBuilding || selectedBuilding == "all") as room}
-            <li>
-              <h3><a href={room.url}>{room.building} - {room.id}</a></h3>
-              <dl>
-                <dt>Room</dt>
-                <dd>{Object.keys(room).filter((k) => ["capacity", "whiteboard", "tv", "outlets"].includes(k) && room[k] != false).join(", ")}</dd>
-                <dt>Environment</dt>
-                <dd>{Object.keys(room).filter((k) => ["quiet"].includes(k) && room[k] != false).join(", ")}</dd>
-                <dt>Location</dt>
-                <dd>{Object.keys(room).filter((k) => ["food_near"].includes(k) && room[k] != false).join(", ")}</dd>
-              </dl>
-            </li>
+            <RoomListItem room={room} query={query} />
           {/each}
         </ul>
       </div>
@@ -127,10 +164,24 @@
     left: 0;
     right: 0;
     bottom: 0;
-    .filters {
+    > * {
+      filter: drop-shadow(0 0 0.25em rgba(0, 0, 0, 0.3137254902));
+    }
+    .top-inputs {
+      display: flex;
+      gap: 0.5em;
+      
       position: absolute;
       top: 1em;
       left: 1em;
+    }
+    .filters {
+      padding: 0.5em;
+      display: flex;
+      gap: 0.5em;
+
+      background: var(--room-finder-grey);
+      border-radius: 1em;
     }
     .floating-sidebar {
       padding: 1em;
@@ -143,22 +194,15 @@
 
       overflow: auto;
 
-      background: white;
+      background: var(--room-finder-grey);
+      border-radius: 1em;
+
       color: black;
       text-align: left;
       ul {
         padding: 0;
         list-style: none;
-        li {
-          padding-bottom: 1em;
-          border-bottom: 1px solid;
-        }
       }
-
-      // ===
-      //border-radius: 15px;
-      background: #E6E6E6;
-
     }
   }
 </style>

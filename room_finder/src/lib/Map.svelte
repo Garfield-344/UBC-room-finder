@@ -1,6 +1,6 @@
 <script>
     import map from '../assets/ubcMap.png';
-    let {buildings} = $props();
+    let {buildings, selectedBuilding=$bindable()} = $props();
 
     let left = $state(0);
     let top = $state(0);
@@ -60,12 +60,14 @@
 
       <div class="map-dots">
       {#each buildings as building}
-        <div class="dot"
+        <button class="dot"
           style:left={"calc(50% + " + reorient(building.coordinates[0], building.coordinates[1])[0] + "px)"}
           style:top={"calc(50% + " + reorient(building.coordinates[0], building.coordinates[1])[1] + "px)"}
-          style:--dotColour={"color-mix(in hsl, var(--dotBrightest) " + String(100* building.score) + "%, transparent)"}
-          style:--title={"'" + building.building + "'"}>
-        </div>
+          style:--score={String(100* building.score) + "%"} 
+          style:--title={"'" + building.building + "'"}
+          onclick={() => selectedBuilding = building.building}
+          aria-label={building.building}>
+        </button>
       {/each}
       </div>
   </div>
@@ -99,18 +101,22 @@
       display: contents;
     }
     .dot {
+      padding: 0;
+      
       position: absolute;
       aspect-ratio: 1;
-      width: 1em;
+      width: calc(var(--score) / 25);
       height: auto;
       border-radius: 100%;
+      border: none;
       transform: translate(-50%, -50%);
 
-      background: var(--dotColour);
-      filter: drop-shadow(0 0 0.5em white);
+      --dotColour: color-mix(in hsl, var(--dotBrightest) var(--score), #ff010175);
 
-      --dotBrightest: green;
+      background: radial-gradient(var(--dotColour) 50%, transparent);
 
+      transition: width 1s, background 1s;
+      
       &:hover {
         cursor: pointer;
         z-index: 500;
